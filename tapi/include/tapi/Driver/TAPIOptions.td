@@ -128,6 +128,12 @@ def bridgeos_version_min : Separate<["-"], "bridgeos_version_min">,
   Flags<[InstallAPIOption, ReexportOption, GenerateAPITestsOption]>,
   Alias<mbridgeos_version_min_EQ>;
 
+def mdriverkit_version_min_EQ : Joined<["-"], "mdriverkit-version-min=">,
+  Flags<[InstallAPIOption, ReexportOption, GenerateAPITestsOption]>;
+def driverkit_version_min : Separate<["-"], "driverkit_version_min">,
+  Flags<[InstallAPIOption, ReexportOption, GenerateAPITestsOption]>,
+  Alias<mdriverkit_version_min_EQ>;
+
 def mios_simulator_version_min_EQ : Joined<["-"], "mios-simulator-version-min=">,
   Flags<[InstallAPIOption, ReexportOption, GenerateAPITestsOption]>;
 def ios_simulator_version_min : Separate<["-"], "ios_simulator_version_min">,
