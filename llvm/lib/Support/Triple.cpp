@@ -211,6 +211,8 @@ StringRef Triple::getOSTypeName(OSType Kind) {
   case Hurd: return "hurd";
   case WASI: return "wasi";
   case Emscripten: return "emscripten";
+  case BridgeOS: return "bridgeos";
+  case DriverKit: return "driverkit";
   }
 
   llvm_unreachable("Invalid OSType");
@@ -1093,12 +1095,30 @@ bool Triple::getMacOSXVersion(unsigned &Major, unsigned &Minor,
       Major = 10;
       Minor = 4;
     }
-    if (Major != 10)
+    if (Major < 10)
       return false;
+    break;
+  case DriverKit:
+    // Default to DriverKit 19, which is macOS 10.15
+    if (Major == 0) {
+      Major = 19;
+      Minor = 0;
+    }
+    if (Major > 19 && Major < 26) {
+      Major = Major + 9;
+      Micro = 0;
+    } else if (Major == 19) {
+      Major = 10;
+      Micro = Minor;
+      Minor = 15;
+    } else {
+      Major = Major + 1;
+    }
     break;
   case IOS:
   case TvOS:
   case WatchOS:
+  case BridgeOS:
     // Ignore the version from the triple.  This is only handled because the
     // the clang driver combines OS X and IOS support into a common Darwin
     // toolchain that wants to know the OS X version number even when targeting
@@ -1158,6 +1178,69 @@ void Triple::getWatchOSVersion(unsigned &Major, unsigned &Minor,
     break;
   case IOS:
     llvm_unreachable("conflicting triple info");
+  }
+}
+
+void Triple::getBridgeOSVersion(unsigned &Major, unsigned &Minor,
+                               unsigned &Micro) const {
+  switch (getOS()) {
+    default: llvm_unreachable("unexpected OS for Darwin triple");
+    case Darwin:
+    case MacOSX:
+      // Ignore the version from the triple.  This is only handled because the
+      // the clang driver combines OS X and IOS support into a common Darwin
+      // toolchain that wants to know the iOS version number even when targeting
+      // OS X.
+      Major = 2;
+      Minor = 0;
+      Micro = 0;
+    case BridgeOS:
+      getOSVersion(Major, Minor, Micro);
+      if (Major == 0)
+        Major = 2;
+      break;
+    case WatchOS:
+    case IOS:
+    case DriverKit:
+      llvm_unreachable("conflicting triple info");
+  }
+}
+
+void Triple::getDriverKitVersion(unsigned &Major, unsigned &Minor,
+                               unsigned &Micro) const {
+  switch (getOS()) {
+    default: llvm_unreachable("unexpected OS for Darwin triple");
+    case Darwin:
+      if (Major < 19) {
+        llvm_unreachable("unexpected Darwin version for DriverKit");
+      }
+      break;
+    case MacOSX:
+      if (Major == 0) {
+        Major = 10;
+        Minor = 15;
+        Micro = 0;
+      }
+      if (Major == 10) {
+        Major = Minor + 4;
+        Minor = Micro;
+      } else if (Major < 26) {
+        Major = Major - 1;
+      } else {
+        Major = Major + 9;
+      }
+      Micro = 0;
+    case DriverKit:
+      getOSVersion(Major, Minor, Micro);
+      if (Major == 0)
+        Major = 19;
+      break;
+    case IOS:
+
+      break;
+    case WatchOS:
+    case BridgeOS:
+      llvm_unreachable("conflicting triple info");
   }
 }
 

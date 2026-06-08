@@ -189,7 +189,9 @@ public:
     Hurd,       // GNU/Hurd
     WASI,       // Experimental WebAssembly OS
     Emscripten,
-    LastOSType = Emscripten
+    BridgeOS,   // Apple bridgeOS
+    DriverKit,  // Apple DriverKit
+    LastOSType = DriverKit
   };
   enum EnvironmentType {
     UnknownEnvironment,
@@ -358,6 +360,16 @@ public:
   void getWatchOSVersion(unsigned &Major, unsigned &Minor,
                          unsigned &Micro) const;
 
+  /// getBridgeOSVersion - Parse the version number as with getOSVersion.  This
+  /// should only be called with bridgeOS or generic triples.
+  void getBridgeOSVersion(unsigned &Major, unsigned &Minor,
+                          unsigned &Micro) const;
+
+  /// getDriverKitVersion - Parse the version number as with getOSVersion.  This
+  /// should only be called with bridgeOS or generic triples.
+  void getDriverKitVersion(unsigned &Major, unsigned &Minor,
+                           unsigned &Micro) const;
+
   /// @}
   /// @name Direct Component Access
   /// @{
@@ -473,13 +485,23 @@ public:
     return getOS() == Triple::WatchOS;
   }
 
+  /// Is this an Apple bridgeOS triple.
+  bool isBridgeOS() const {
+    return getOS() == Triple::BridgeOS;
+  }
+
+  /// Is this an Apple DriverKit triple.
+  bool isDriverKit() const {
+    return getOS() == Triple::DriverKit;
+  }
+
   bool isWatchABI() const {
     return getSubArch() == Triple::ARMSubArch_v7k;
   }
 
   /// isOSDarwin - Is this a "Darwin" OS (OS X, iOS, or watchOS).
   bool isOSDarwin() const {
-    return isMacOSX() || isiOS() || isWatchOS();
+    return isMacOSX() || isiOS() || isWatchOS() || isBridgeOS() || isDriverKit();
   }
 
   bool isSimulatorEnvironment() const {

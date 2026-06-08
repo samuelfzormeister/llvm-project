@@ -520,10 +520,12 @@ void MCAsmStreamer::EmitDataRegion(MCDataRegionType Kind) {
 
 static const char *getVersionMinDirective(MCVersionMinType Type) {
   switch (Type) {
-  case MCVM_WatchOSVersionMin: return ".watchos_version_min";
-  case MCVM_TvOSVersionMin:    return ".tvos_version_min";
-  case MCVM_IOSVersionMin:     return ".ios_version_min";
-  case MCVM_OSXVersionMin:     return ".macosx_version_min";
+  case MCVM_DriverKitVersionMin:  return ".driverkit_version_min";
+  case MCVM_BridgeOSVersionMin:   return ".bridgeos_version_min";
+  case MCVM_WatchOSVersionMin:    return ".watchos_version_min";
+  case MCVM_TvOSVersionMin:       return ".tvos_version_min";
+  case MCVM_IOSVersionMin:        return ".ios_version_min";
+  case MCVM_OSXVersionMin:        return ".macosx_version_min";
   }
   llvm_unreachable("Invalid MC version min type");
 }
@@ -562,6 +564,7 @@ static const char *getPlatformName(MachO::PlatformType Type) {
   case MachO::PLATFORM_IOSSIMULATOR:     return "iossimulator";
   case MachO::PLATFORM_TVOSSIMULATOR:    return "tvossimulator";
   case MachO::PLATFORM_WATCHOSSIMULATOR: return "watchossimulator";
+  case MachO::PLATFORM_DRIVERKIT:        return "driverkit";
   }
   llvm_unreachable("Invalid Mach-O platform type");
 }
