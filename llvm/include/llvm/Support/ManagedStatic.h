@@ -41,7 +41,7 @@ template <typename T, size_t N> struct object_deleter<T[N]> {
 // settings. For the affected versions of MSVC, use the old linker
 // initialization pattern of not providing a constructor and leaving the fields
 // uninitialized.
-#if !defined(_MSC_VER) || defined(__clang__)
+#if !defined(_MSC_VER) || (_MSC_VER >= 1925) || defined(__clang__)
 #define LLVM_USE_CONSTEXPR_CTOR
 #endif
 
