@@ -760,7 +760,7 @@ ToolChain::CXXStdlibType Darwin::GetDefaultCXXStdlibType() const {
   // Default to use libc++ on OS X 10.9+ and iOS 7+.
   if ((isTargetMacOS() && !isMacosxVersionLT(10, 9)) ||
        (isTargetIOSBased() && !isIPhoneOSVersionLT(7, 0)) ||
-       isTargetWatchOSBased())
+       isTargetWatchOSBased() || isTargetBridgeOS() || isTargetDriverKit())
     return ToolChain::CST_Libcxx;
 
   return ToolChain::CST_Libstdcxx;
@@ -779,7 +779,8 @@ ObjCRuntime Darwin::getDefaultObjCRuntime(bool isNonFragile) const {
 
 /// Darwin provides a blocks runtime starting in MacOS X 10.6 and iOS 3.2.
 bool Darwin::hasBlocksRuntime() const {
-  if (isTargetWatchOSBased())
+  if (isTargetWatchOSBased() ||  isTargetBridgeOS() || 
+      isTargetDriverKit())
     return true;
   else if (isTargetIOSBased())
     return !isIPhoneOSVersionLT(3, 2);
@@ -876,6 +877,10 @@ std::string Darwin::ComputeEffectiveClangTriple(const ArgList &Args,
     Str += "tvos";
   else if (isTargetIOSBased())
     Str += "ios";
+  else if (isTargetBridgeOS())
+    Str += "bridgeos";
+  else if (isTargetDriverKit())
+    Str += "driverkit";
   else
     Str += "macosx";
   Str += getTargetVersion().getAsString();
@@ -977,7 +982,7 @@ void DarwinClang::AddLinkARCArgs(const ArgList &Args,
   // Mash in the platform.
   if (isTargetWatchOSSimulator())
     P += "watchsimulator";
-  else if (isTargetWatchOS())
+  else if (isTargetWatchOS() || isTargetBridgeOS())
     P += "watchos";
   else if (isTargetTvOSSimulator())
     P += "appletvsimulator";
@@ -1063,6 +1068,11 @@ StringRef Darwin::getPlatformFamily() const {
       return "AppleTV";
     case DarwinPlatformKind::WatchOS:
       return "Watch";
+    case DarwinPlatformKind::BridgeOS:
+      // [samuelfzormeister]: Unsure of actual bridgeOS platform name.
+      return "Bridge";
+    case DarwinPlatformKind::DriverKit:
+      return "DriverKit";
   }
   llvm_unreachable("Unsupported platform");
 }
@@ -1093,6 +1103,11 @@ StringRef Darwin::getOSLibraryNameSuffix(bool IgnoreSim) const {
   case DarwinPlatformKind::WatchOS:
     return TargetEnvironment == NativeEnvironment || IgnoreSim ? "watchos"
                                                                : "watchossim";
+  case DarwinPlatformKind::BridgeOS:
+    // [samuelfzormeister]: Unsure of actual bridgeOS library suffix.
+    return "bridgeos";
+  case DarwinPlatformKind::DriverKit:
+    return "driverkit";
   }
   llvm_unreachable("Unsupported platform");
 }
@@ -1352,6 +1367,12 @@ struct DarwinPlatform {
     case DarwinPlatformKind::WatchOS:
       Opt = options::OPT_mwatchos_version_min_EQ;
       break;
+    case DarwinPlatformKind::BridgeOS:
+      Opt = options::OPT_mbridgeos_version_min_EQ;
+      break;
+    case DarwinPlatformKind::DriverKit:
+      Opt = options::OPT_mdriverkit_version_min_EQ;
+      break;
     }
     Argument = Args.MakeJoinedArg(nullptr, Opts.getOption(Opt), OSVersion);
     Args.append(Argument);
@@ -1445,6 +1466,10 @@ private:
       return DarwinPlatformKind::TvOS;
     case llvm::Triple::WatchOS:
       return DarwinPlatformKind::WatchOS;
+    case llvm::Triple::BridgeOS:
+      return DarwinPlatformKind::BridgeOS;
+    case llvm::Triple::DriverKit:
+      return DarwinPlatformKind::DriverKit;
     default:
       llvm_unreachable("Unable to infer Darwin variant");
     }
@@ -1473,6 +1498,8 @@ getDeploymentTargetFromOSVersionArg(DerivedArgList &Args,
   Arg *WatchOSVersion =
       Args.getLastArg(options::OPT_mwatchos_version_min_EQ,
                       options::OPT_mwatchos_simulator_version_min_EQ);
+  Arg *BridgeOSVersion = Args.getLastArg(options::OPT_mbridgeos_version_min_EQ);
+  Arg *DriverKitVersion = Args.getLastArg(options::OPT_mdriverkit_version_min_EQ);
   if (OSXVersion) {
     if (iOSVersion || TvOSVersion || WatchOSVersion) {
       TheDriver.Diag(diag::err_drv_argument_not_allowed_with)
@@ -1496,8 +1523,12 @@ getDeploymentTargetFromOSVersionArg(DerivedArgList &Args,
           << WatchOSVersion->getAsString(Args);
     }
     return DarwinPlatform::createOSVersionArg(Darwin::TvOS, TvOSVersion);
-  } else if (WatchOSVersion)
+  } else if (WatchOSVersion) {
     return DarwinPlatform::createOSVersionArg(Darwin::WatchOS, WatchOSVersion);
+  } else if (BridgeOSVersion) {
+    return DarwinPlatform::createOSVersionArg(Darwin::BridgeOS, BridgeOSVersion);
+  } else if (DriverKitVersion)
+    return DarwinPlatform::createOSVersionArg(Darwin::DriverKit, DriverKitVersion);
   return None;
 }
 
@@ -1512,6 +1543,8 @@ getDeploymentTargetFromEnvironmentVariables(const Driver &TheDriver,
       "IPHONEOS_DEPLOYMENT_TARGET",
       "TVOS_DEPLOYMENT_TARGET",
       "WATCHOS_DEPLOYMENT_TARGET",
+      "BRIDGEOS_DEPLOYMENT_TARGET",
+      "DRIVERKIT_DEPLOYMENT_TARGET"
   };
   static_assert(llvm::array_lengthof(EnvVars) == Darwin::LastDarwinPlatform + 1,
                 "Missing platform");
@@ -1603,6 +1636,12 @@ inferDeploymentTargetFromSDK(DerivedArgList &Args,
     return DarwinPlatform::createFromSDK(
         Darwin::TvOS, Version,
         /*IsSimulator=*/SDK.startswith("AppleTVSimulator"));
+  else if (SDK.startswith("BridgeOS") || SDK.startswith("Bridge"))
+    return DarwinPlatform::createFromSDK(
+        Darwin::BridgeOS, Version);
+  else if (SDK.startswith("DriverKit"))
+    return DarwinPlatform::createFromSDK(
+        Darwin::DriverKit, Version);
   return None;
 }
 
@@ -1630,6 +1669,12 @@ std::string getOSVersion(llvm::Triple::OSType OS, const llvm::Triple &Triple,
     break;
   case llvm::Triple::WatchOS:
     Triple.getWatchOSVersion(Major, Minor, Micro);
+    break;
+  case llvm::Triple::BridgeOS:
+    Triple.getBridgeOSVersion(Major, Minor, Micro);
+    break;
+  case llvm::Triple::DriverKit:
+    Triple.getDriverKitVersion(Major, Minor, Micro);
     break;
   default:
     llvm_unreachable("Unexpected OS type");
@@ -2355,6 +2400,12 @@ bool Darwin::isAlignedAllocationUnavailable() const {
   case WatchOS: // Earlier than 4.0.
     OS = llvm::Triple::WatchOS;
     break;
+  case BridgeOS:
+    OS = llvm::Triple::BridgeOS;
+    break;
+  case DriverKit:
+    OS = llvm::Triple::BridgeOS;
+    break;
   }
 
   return TargetVersion < alignedAllocMinVersion(OS);
@@ -2515,6 +2566,10 @@ void Darwin::addMinVersionArgs(const ArgList &Args,
     CmdArgs.push_back("-ios_simulator_version_min");
   else if (isTargetIOSBased())
     CmdArgs.push_back("-iphoneos_version_min");
+  else if (isTargetBridgeOS())
+    CmdArgs.push_back("-bridgeos_version_min");
+  else if (isTargetDriverKit())
+    CmdArgs.push_back("-driverkit_version_min");                           
   else {
     assert(isTargetMacOS() && "unexpected target");
     CmdArgs.push_back("-macosx_version_min");
@@ -2538,6 +2593,10 @@ static const char *getPlatformName(Darwin::DarwinPlatformKind Platform,
     return "tvos";
   case Darwin::WatchOS:
     return "watchos";
+  case Darwin::BridgeOS:
+    return "bridgeos";
+  case Darwin::DriverKit:
+    return "driverkit";
   }
   llvm_unreachable("invalid platform");
 }

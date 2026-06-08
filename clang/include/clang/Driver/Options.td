@@ -2136,6 +2136,10 @@ def mmacosx_version_min_EQ : Joined<["-"], "mmacosx-version-min=">,
   Group<m_Group>, HelpText<"Set Mac OS X deployment target">;
 def mmacos_version_min_EQ : Joined<["-"], "mmacos-version-min=">,
   Group<m_Group>, Alias<mmacosx_version_min_EQ>;
+def mdriverkit_version_min_EQ : Joined<["-"], "mdriverkit-version-min=">,
+  Group<m_Group>, HelpText<"Set DriverKit deployment target">;
+def mbridgeos_version_min_EQ : Joined<["-"], "mbridgeos-version-min=">,
+  Group<m_Group>, HelpText<"Set bridgeOS deployment target">;
 def mms_bitfields : Flag<["-"], "mms-bitfields">, Group<m_Group>, Flags<[CC1Option]>,
   HelpText<"Set the default structure layout to be compatible with the Microsoft compiler standard">;
 def moutline : Flag<["-"], "moutline">, Group<f_clang_Group>, Flags<[CC1Option]>,

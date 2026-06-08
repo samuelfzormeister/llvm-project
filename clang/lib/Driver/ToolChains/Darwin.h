@@ -280,7 +280,9 @@ public:
     IPhoneOS,
     TvOS,
     WatchOS,
-    LastDarwinPlatform = WatchOS
+    BridgeOS,
+    DriverKit,
+    LastDarwinPlatform = DriverKit
   };
   enum DarwinEnvironmentKind {
     NativeEnvironment,
@@ -404,6 +406,16 @@ protected:
   bool isTargetMacOS() const {
     assert(TargetInitialized && "Target not initialized!");
     return TargetPlatform == MacOS;
+  }
+
+  bool isTargetBridgeOS() const {
+    assert(TargetInitialized && "Target not initialized!");
+    return TargetPlatform == BridgeOS;
+  }
+
+  bool isTargetDriverKit() const {
+    assert(TargetInitialized && "Target not initialized!");
+    return TargetPlatform == DriverKit;
   }
 
   bool isTargetInitialized() const { return TargetInitialized; }
