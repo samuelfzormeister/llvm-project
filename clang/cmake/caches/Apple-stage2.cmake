@@ -9,7 +9,7 @@ set(LLVM_INCLUDE_DOCS OFF CACHE BOOL "")
 set(LLVM_TOOL_CLANG_TOOLS_EXTRA_BUILD OFF CACHE BOOL "")
 set(CLANG_TOOL_SCAN_BUILD_BUILD OFF CACHE BOOL "")
 set(CLANG_TOOL_SCAN_VIEW_BUILD OFF CACHE BOOL "")
-set(CLANG_LINKS_TO_CREATE clang++ cc c++ CACHE STRING "")
+# set(CLANG_LINKS_TO_CREATE clang++ cc c++ CACHE STRING "")
 set(CMAKE_MACOSX_RPATH ON CACHE BOOL "")
 set(LLVM_ENABLE_ZLIB ON CACHE BOOL "")
 set(LLVM_ENABLE_BACKTRACES OFF CACHE BOOL "")
@@ -21,7 +21,7 @@ set(BUG_REPORT_URL "http://developer.apple.com/bugreporter/" CACHE STRING "")
 set(LLVM_BUILD_EXTERNAL_COMPILER_RT ON CACHE BOOL "Build Compiler-RT with just-built clang")
 set(COMPILER_RT_ENABLE_IOS ON CACHE BOOL "Build iOS Compiler-RT libraries")
 
-set(LLVM_CREATE_XCODE_TOOLCHAIN ON CACHE BOOL "Generate targets to create and install an Xcode compatible toolchain")
+# set(LLVM_CREATE_XCODE_TOOLCHAIN ON CACHE BOOL "Generate targets to create and install an Xcode compatible toolchain")
 
 # Make unit tests (if present) part of the ALL target
 set(LLVM_BUILD_TESTS ON CACHE BOOL "")
@@ -43,7 +43,7 @@ set(LLVM_LTO_VERSION_OFFSET 3000 CACHE STRING "")
 
 # Generating Xcode toolchains is useful for developers wanting to build and use
 # clang without installing over existing tools.
-set(LLVM_CREATE_XCODE_TOOLCHAIN ON CACHE BOOL "")
+# set(LLVM_CREATE_XCODE_TOOLCHAIN ON CACHE BOOL "")
 
 # setup toolchain
 set(LLVM_INSTALL_TOOLCHAIN_ONLY ON CACHE BOOL "")
@@ -62,7 +62,7 @@ set(LLVM_DISTRIBUTION_COMPONENTS
   LTO
   clang-format
   clang-resource-headers
-  cxx-headers
+  libcxx
   Remarks
   ${LLVM_TOOLCHAIN_TOOLS}
   CACHE STRING "")
