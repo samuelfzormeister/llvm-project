@@ -181,6 +181,13 @@ private:
   DominatorTreeBase DT;
 };
 
+/// [samuelfzormeister]: pls do not remove, will break building.
+template <>
+void CFGDominatorTreeImpl<false>::anchor();
+
+template <>
+void CFGDominatorTreeImpl<true>::anchor();
+
 using CFGDomTree = CFGDominatorTreeImpl</*IsPostDom*/ false>;
 using CFGPostDomTree = CFGDominatorTreeImpl</*IsPostDom*/ true>;
 
