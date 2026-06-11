@@ -103,6 +103,8 @@ if(APPLE)
   endif()
 
   option(COMPILER_RT_ENABLE_IOS "Enable building for iOS" On)
+  option(COMPILER_RT_ENABLE_BRIDGEOS "Enable building for bridgeOS" Off)
+  option(COMPILER_RT_ENABLE_DRIVERKIT "Enable building for DriverKit" On)
   option(COMPILER_RT_ENABLE_WATCHOS "Enable building for watchOS - Experimental" Off)
   option(COMPILER_RT_ENABLE_TVOS "Enable building for tvOS - Experimental" Off)
 
