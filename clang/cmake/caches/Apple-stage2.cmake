@@ -62,8 +62,7 @@ set(LLVM_DISTRIBUTION_COMPONENTS
   LTO
   clang-format
   clang-resource-headers
-  libcxx
-  Remarks
+  IndexStore
   ${LLVM_TOOLCHAIN_TOOLS}
   CACHE STRING "")
 

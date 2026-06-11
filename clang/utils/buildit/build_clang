@@ -231,7 +231,7 @@ $CMAKE -G 'Ninja' -C $CACHE_FILE \
     || exit 1
 
 if [ "$BUILDING_HOST" = "YES" ]; then
-  $NINJA -v install-cxx
+  $NINJA -v install-libcxx
   if ! test $? == 0 ; then
       echo "error: LLVM 'ninja install-libcxx' failed!"
       exit 1
