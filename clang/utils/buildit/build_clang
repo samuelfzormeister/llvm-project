@@ -288,7 +288,7 @@ mv $TOOLCHAIN_USR/bin/clang-format $TOOLCHAIN_USR/local/bin/
 rm $TOOLCHAIN_USR/bin/git-clang-format
 rm $TOOLCHAIN_USR/bin/clang-check
 rm $TOOLCHAIN_USR/bin/clang
-mv $TOOLCHAIN_USR/bin/clang-$MAJ_MIN_VER $TOOLCHAIN_USR/bin/clang
+mv $TOOLCHAIN_USR/bin/clang-$MAJOR_VERSION $TOOLCHAIN_USR/bin/clang
 
 # fixup headers
 mv $TOOLCHAIN_USR/include/llvm-c $TOOLCHAIN_USR/local/include/llvm-c
