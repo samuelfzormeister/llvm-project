@@ -50,9 +50,11 @@ set(LLVM_INSTALL_TOOLCHAIN_ONLY ON CACHE BOOL "")
 set(LLVM_TOOLCHAIN_TOOLS
   dsymutil
   llvm-cov
+  llvm-cxxfilt
   llvm-dwarfdump
   llvm-profdata
   llvm-objdump
+  llvm-otool
   llvm-nm
   llvm-size
   CACHE STRING "")
