@@ -320,7 +320,7 @@ if [ -d $IB_ROOT ]; then
 fi
 mkdir -p $TOOLCHAIN_USR/local/OpenSourceLicenses/
 install -m 0444 $LLVM_SRCROOT/LICENSE.TXT $TOOLCHAIN_USR/local/OpenSourceLicenses/clang-llvm.txt
-install -m 0444 $LLVM_SRCROOT/tools/clang/LICENSE.TXT $TOOLCHAIN_USR/local/OpenSourceLicenses/clang.txt
+install -m 0444 $LLVM_SRCROOT/clang/LICENSE.TXT $TOOLCHAIN_USR/local/OpenSourceLicenses/clang.txt
 
 if [ "$BUILDING_HOST" != "YES" ]; then
   rm -rf $DSTROOT/usr/local/include/llvm*
@@ -335,9 +335,11 @@ ln -sf llvm-cov.1 gcov.1
 # symlink dsymutil, gcov and objdump
 cd $TOOLCHAIN_USR/bin
 
-ln -s llvm-dsymutil dsymutil
 ln -s llvm-cov gcov
 ln -s llvm-objdump objdump
+ln -s llvm-nm nm
+ln -s llvm-otool otool
+ln -s llvm-cxxfilt c++filt
 
 cd $SYMROOT || exit 1
 
@@ -359,8 +361,8 @@ find $OBJECT_DIR -type f -perm +111 -exec cp -r {} $SYMROOT/ \; || exit 1
 STRIP=`xcrun -find strip`
 find $TOOLCHAIN_USR -type f -perm +111 -exec $STRIP -S {} \; || exit 1
 
-mv $SYMROOT/clang-$MAJ_MIN_VER $SYMROOT/clang
-mv $SYMROOT/clang-$MAJ_MIN_VER.dSYM $SYMROOT/clang.dSYM
+mv $SYMROOT/clang-$MAJOR_VERSION $SYMROOT/clang
+mv $SYMROOT/clang-$MAJOR_VERSION.dSYM $SYMROOT/clang.dSYM
 
 chgrp -h -R wheel $DSTROOT
 chgrp -R wheel $DSTROOT
