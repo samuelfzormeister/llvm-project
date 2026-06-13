@@ -127,7 +127,7 @@ CMAKE_OPTS="\
   -DCMAKE_MAKE_PROGRAM=$NINJA \
   -DCMAKE_CXX_COMPILER=$CXX \
   -DCMAKE_C_COMPILER=$CC \
-  -DLLVM_ENABLE_PROJECTS="clang\;libcxx" \
+  -DLLVM_ENABLE_PROJECTS="clang\;libcxx\;clang-tools-extra\;compiler-rt" \
   -DLIBCXX_INSTALL_LIBRARY=OFF \
   -DLIBCXX_INSTALL_HEADERS=ON \
   -DLLVM_PARALLEL_LINK_JOBS=$link_threads \
@@ -338,7 +338,6 @@ cd $TOOLCHAIN_USR/bin
 ln -s llvm-cov gcov
 ln -s llvm-objdump objdump
 ln -s llvm-nm nm
-ln -s llvm-otool otool
 ln -s llvm-cxxfilt c++filt
 
 cd $SYMROOT || exit 1

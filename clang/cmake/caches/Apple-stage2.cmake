@@ -54,7 +54,6 @@ set(LLVM_TOOLCHAIN_TOOLS
   llvm-dwarfdump
   llvm-profdata
   llvm-objdump
-  llvm-otool
   llvm-nm
   llvm-size
   CACHE STRING "")
