@@ -1,3 +1,4 @@
+add_subdirectory(APIVerifier)
 add_subdirectory(Config)
 add_subdirectory(ConfigurationFiles)
 add_subdirectory(Core)
