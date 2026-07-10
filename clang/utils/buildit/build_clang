@@ -191,7 +191,7 @@ mkdir -p $OBJROOT/obj-llvm || exit 1
 cd $OBJROOT/obj-llvm || exit 1
 
 if [ "$BUILDING_HOST" = "YES" ]; then
-  CACHE_FILE=$LLVM_SRCROOT/clang/cmake/caches/Apple-stage1.cmake
+  CACHE_FILE=$LLVM_SRCROOT/clang/cmake/caches/NeoDarwin-stage1.cmake
   BUILD_TARGET=stage2-install-distribution
   LLVM_CONFIG_TARGET=stage2-llvm-config
 else
@@ -260,6 +260,7 @@ if [ "$BUILDING_HOST" = "YES" ]; then
       -DCMAKE_CXX_COMPILER=$TOOLCHAIN_USR/bin/clang++ \
       -DCOMPILER_RT_EXTERNALIZE_DEBUGINFO_SKIP_STRIP=On \
       -DCMAKE_OSX_DEPLOYMENT_TARGET=10.7 \
+      -DDARWIN_osx_ARCHS="i386;x86_64;x86_64h;armv7;armv7k;armv7s;arm64" \
       -DDARWIN_ios_ARCHS="armv7;armv7k;armv7s;arm64" \
       -DDARWIN_tvos_ARCHS="armv7;arm64" \
       -DDARWIN_watchos_ARCHS="armv7;armv7k;arm64" \
