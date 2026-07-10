@@ -127,7 +127,7 @@ CMAKE_OPTS="\
   -DCMAKE_MAKE_PROGRAM=$NINJA \
   -DCMAKE_CXX_COMPILER=$CXX \
   -DCMAKE_C_COMPILER=$CC \
-  -DLLVM_ENABLE_PROJECTS="clang\;libcxx\;clang-tools-extra\;compiler-rt" \
+  -DLLVM_ENABLE_PROJECTS="clang\;clang-tools-extra\;libcxx" \
   -DLIBCXX_INSTALL_LIBRARY=OFF \
   -DLIBCXX_INSTALL_HEADERS=ON \
   -DLLVM_PARALLEL_LINK_JOBS=$link_threads \
@@ -231,9 +231,9 @@ $CMAKE -G 'Ninja' -C $CACHE_FILE \
     || exit 1
 
 if [ "$BUILDING_HOST" = "YES" ]; then
-  $NINJA -v install-libcxx
+  $NINJA -v install-cxx
   if ! test $? == 0 ; then
-      echo "error: LLVM 'ninja install-libcxx' failed!"
+      echo "error: LLVM 'ninja install-cxx' failed!"
       exit 1
   fi
 fi
