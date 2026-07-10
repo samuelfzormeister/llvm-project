@@ -116,6 +116,12 @@ template <> struct ScalarTraits<Target> {
     case Platform::watchOSSimulator:
       os << "watchos-simulator";
       break;
+    case Platform::bridgeOS:
+      os << "bridgeos";
+      break;
+    case Platform::DriverKit:
+      os << "driverkit";
+      break;
     }
   }
 

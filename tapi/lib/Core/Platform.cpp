@@ -57,6 +57,10 @@ Platform mapToPlatform(const Triple &target) {
   case Triple::WatchOS:
     return target.isSimulatorEnvironment() ? Platform::watchOSSimulator
                                            : Platform::watchOS;
+  case Triple::BridgeOS:
+    return Platform::bridgeOS;
+  case Triple::DriverKit:
+    return Platform::DriverKit;
   }
 }
 
@@ -100,6 +104,10 @@ StringRef getPlatformName(Platform platform) {
     return "tvOS Simulator";
   case Platform::watchOSSimulator:
     return "watchOS Simulator";
+  case Platform::DriverKit:
+    return "DriverKit";
+  case Platform::bridgeOS:
+    return "bridgeOS";
   }
 }
 
@@ -125,6 +133,8 @@ std::string getOSAndEnvironmentName(Platform platform, std::string version) {
     return "tvos" + version + "-simulator";
   case Platform::watchOSSimulator:
     return "watchos" + version + "-simulator";
+  case Platform::DriverKit:
+    return "driverkit" + version;
   }
 }
 
