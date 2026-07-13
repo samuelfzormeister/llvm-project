@@ -5517,7 +5517,7 @@ validateSwiftFunctionName(StringRef Name,
   // A subscript accessor must be a getter or setter.
   if (IsSubscript && !isGetter && !isSetter)
     return diag::warn_attr_swift_name_subscript_not_accessor;
-  
+
   if (Parameters.empty())
     return diag::warn_attr_swift_name_missing_parameters;
   Parameters = Parameters.drop_back(); // ')'
@@ -5528,7 +5528,7 @@ validateSwiftFunctionName(StringRef Name,
       return diag::warn_attr_swift_name_subscript_no_parameter;
     if (isSetter)
       return diag::warn_attr_swift_name_setter_parameters;
-    
+
     return None;
   }
 
@@ -5553,13 +5553,13 @@ validateSwiftFunctionName(StringRef Name,
       // The "self" location is the current parameter.
       SelfLocation = SwiftParamCount;
     }
-    
+
     // "newValue" indicates the "newValue" argument for a setter.
     if (NextParam == "newValue") {
       // There should only be one 'newValue', but it's only significant for
       // subscript accessors, so don't error right away.
       ++NewValueCount;
-      
+
       NewValueLocation = SwiftParamCount;
     }
     ++SwiftParamCount;
@@ -5577,7 +5577,7 @@ validateSwiftFunctionName(StringRef Name,
     // Setters have one parameter for the new value.
     unsigned NumExpectedParams;
     unsigned ParamDiag;
-    
+
     if (isSetter) {
       NumExpectedParams = 1;
       ParamDiag = diag::warn_attr_swift_name_setter_parameters;
@@ -5588,7 +5588,7 @@ validateSwiftFunctionName(StringRef Name,
 
     // Instance methods have one parameter for "self".
     if (SelfLocation) ++NumExpectedParams;
-    
+
     // Subscripts may have additional parameters beyond the expected params for
     // the index.
     if (IsSubscript) {
@@ -5613,7 +5613,7 @@ validateSwiftFunctionName(StringRef Name,
         return ParamDiag;
     }
   }
-  
+
   return None;
 }
 
@@ -5645,7 +5645,7 @@ bool Sema::DiagnoseSwiftName(Decl *D, StringRef Name,
       const auto *Function = cast<FunctionDecl>(D);
       ParamCount = Function->getNumParams();
       Params = Function->parameters();
-      
+
       if (!Function->hasWrittenPrototype()) {
         Diag(ArgLoc, diag::warn_attr_swift_name_function_no_prototype)
           << AttrName;
@@ -5660,7 +5660,7 @@ bool Sema::DiagnoseSwiftName(Decl *D, StringRef Name,
       Diag(ArgLoc, *diagID) << AttrName;
       return false;
     }
-  
+
     bool ParamsOK;
     if (SwiftParamCount == ParamCount) {
       ParamsOK = true;
@@ -8327,6 +8327,12 @@ shouldDiagnoseAvailabilityByDefault(const ASTContext &Context,
   case llvm::Triple::Darwin:
   case llvm::Triple::MacOSX:
     ForceAvailabilityFromVersion = VersionTuple(/*Major=*/10, /*Minor=*/13);
+    break;
+  case llvm::Triple::BridgeOS:
+    ForceAvailabilityFromVersion = VersionTuple(/*Major=*/2, /*Minor=*/0);
+    break;
+  case llvm::Triple::DriverKit:
+    ForceAvailabilityFromVersion = VersionTuple(/*Major=*/19, /*Minor=*/0);
     break;
   default:
     // New targets should always warn about availability.
