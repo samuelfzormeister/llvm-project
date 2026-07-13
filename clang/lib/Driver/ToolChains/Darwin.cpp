@@ -1880,13 +1880,19 @@ void Darwin::AddDeploymentTarget(DerivedArgList &Args) const {
         HadExtra || Major >= 10 || Minor >= 100 || Micro >= 100)
       getDriver().Diag(diag::err_drv_invalid_version_number)
           << OSTarget->getAsString(Args, Opts);
+  } else if (Platform == DriverKit) {
+      if (!Driver::GetReleaseVersion(OSTarget->getOSVersion(), Major, Minor,
+                                     Micro, HadExtra) ||
+          HadExtra || Major >= 100 || Minor >= 100 || Micro >= 100)
+        getDriver().Diag(diag::err_drv_invalid_version_number)
+            << OSTarget->getAsString(Args, Opts);
   } else
     llvm_unreachable("unknown kind of Darwin platform");
 
   DarwinEnvironmentKind Environment = OSTarget->getEnvironment();
   // Recognize iOS targets with an x86 architecture as the iOS simulator.
   if (Environment == NativeEnvironment && Platform != MacOS &&
-      OSTarget->canInferSimulatorFromArch() &&
+      OSTarget->canInferSimulatorFromArch() && Platform != DriverKit &&
       (getTriple().getArch() == llvm::Triple::x86 ||
        getTriple().getArch() == llvm::Triple::x86_64))
     Environment = Simulator;
@@ -2569,7 +2575,7 @@ void Darwin::addMinVersionArgs(const ArgList &Args,
   else if (isTargetBridgeOS())
     CmdArgs.push_back("-bridgeos_version_min");
   else if (isTargetDriverKit())
-    CmdArgs.push_back("-driverkit_version_min");                           
+    CmdArgs.push_back("-driverkit_version_min");
   else {
     assert(isTargetMacOS() && "unexpected target");
     CmdArgs.push_back("-macosx_version_min");
