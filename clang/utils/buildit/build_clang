@@ -251,7 +251,7 @@ if [ "$BUILDING_HOST" = "YES" ]; then
 
   OLD_OSX_DEPLOYMENT_TARGET=OSX_DEPLOYMENT_TARGET
   OSX_DEPLOYMENT_TARGET=
-  $CMAKE -G 'Ninja' -C $LLVM_SRCROOT/compiler-rt/cmake/caches/Apple.cmake \
+  $CMAKE -G 'Ninja' -C $LLVM_SRCROOT/compiler-rt/cmake/caches/NeoDarwin.cmake \
       $CMAKE_OPTS \
       -DCMAKE_BUILD_TYPE=Release \
       -DLLVM_CONFIG_PATH=$OBJROOT/obj-llvm/tools/clang/stage2-bins/bin/llvm-config \
