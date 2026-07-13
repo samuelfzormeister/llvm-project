@@ -197,12 +197,14 @@ arm::FloatABI arm::getARMFloatABI(const ToolChain &TC, const ArgList &Args) {
     case llvm::Triple::Darwin:
     case llvm::Triple::MacOSX:
     case llvm::Triple::IOS:
+    case llvm::Triple::DriverKit:
     case llvm::Triple::TvOS: {
       // Darwin defaults to "softfp" for v6 and v7.
       ABI = (SubArch == 6 || SubArch == 7) ? FloatABI::SoftFP : FloatABI::Soft;
       ABI = Triple.isWatchABI() ? FloatABI::Hard : ABI;
       break;
     }
+    case llvm::Triple::BridgeOS:
     case llvm::Triple::WatchOS:
       ABI = FloatABI::Hard;
       break;
