@@ -66,13 +66,6 @@ if(APPLE)
       -mmacosx-version-min=${DARWIN_osx_BUILTIN_MIN_VER})
   set(DARWIN_osx_BUILTIN_ALL_POSSIBLE_ARCHS ${X86} ${X86_64})
 
-  if(COMPILER_RT_ENABLE_DRIVERKIT)
-    set(DARWIN_driverkit_BUILTIN_MIN_VER 19.0)
-    set(DARWIN_driverkit_BUILTIN_MIN_VER_FLAG
-        -mdriverkit-version-min=${DARWIN_driverkit_BUILTIN_MIN_VER})
-    set(DARWIN_driverkit_BUILTIN_ALL_POSSIBLE_ARCHS ${X86_64})
-  endif()
-
   if(COMPILER_RT_ENABLE_IOS)
     list(APPEND DARWIN_EMBEDDED_PLATFORMS ios)
     set(DARWIN_ios_MIN_VER_FLAG -miphoneos-version-min)
@@ -129,6 +122,11 @@ if(APPLE)
   endforeach()
 
   if(COMPILER_RT_ENABLE_DRIVERKIT)
+    set(DARWIN_driverkit_BUILTIN_MIN_VER 19.0)
+    set(DARWIN_driverkit_BUILTIN_MIN_VER_FLAG
+        -mdriverkit-version-min=${DARWIN_driverkit_BUILTIN_MIN_VER})
+    set(DARWIN_driverkit_BUILTIN_ALL_POSSIBLE_ARCHS ${X86_64} ${ARM64})
+    set(DARWIN_driverkit_BUILTIN_ARCHS ${X86_64})
     if(DARWIN_driverkit_SYSROOT)
       list(APPEND BUILTIN_SUPPORTED_OS driverkit)
       message(STATUS "DriverKit supported builtin arches: ${DARWIN_driverkit_BUILTIN_ARCHS}")
