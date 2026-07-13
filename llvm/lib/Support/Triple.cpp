@@ -1194,6 +1194,7 @@ void Triple::getBridgeOSVersion(unsigned &Major, unsigned &Minor,
       Major = 2;
       Minor = 0;
       Micro = 0;
+      break;
     case BridgeOS:
       getOSVersion(Major, Minor, Micro);
       if (Major == 0)
@@ -1224,19 +1225,22 @@ void Triple::getDriverKitVersion(unsigned &Major, unsigned &Minor,
       if (Major == 10) {
         Major = Minor + 4;
         Minor = Micro;
-      } else if (Major < 26) {
+      } else if (Major >= 27) {
+        Major = (Major + 0);
+      } else if (Major == 26) {
         Major = Major - 1;
       } else {
         Major = Major + 9;
       }
       Micro = 0;
+      break;
     case DriverKit:
       getOSVersion(Major, Minor, Micro);
       if (Major == 0)
         Major = 19;
       break;
     case IOS:
-
+      // [samuelfzormeister]: iOS does support DriverKit.
       break;
     case WatchOS:
     case BridgeOS:
