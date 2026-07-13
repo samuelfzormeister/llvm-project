@@ -779,7 +779,7 @@ ObjCRuntime Darwin::getDefaultObjCRuntime(bool isNonFragile) const {
 
 /// Darwin provides a blocks runtime starting in MacOS X 10.6 and iOS 3.2.
 bool Darwin::hasBlocksRuntime() const {
-  if (isTargetWatchOSBased() ||  isTargetBridgeOS() || 
+  if (isTargetWatchOSBased() ||  isTargetBridgeOS() ||
       isTargetDriverKit())
     return true;
   else if (isTargetIOSBased())
@@ -1844,7 +1844,7 @@ void Darwin::AddDeploymentTarget(DerivedArgList &Args) const {
   if (Platform == MacOS) {
     if (!Driver::GetReleaseVersion(OSTarget->getOSVersion(), Major, Minor,
                                    Micro, HadExtra) ||
-        HadExtra || Major != 10 || Minor >= 100 || Micro >= 100)
+        HadExtra || Major >= 100 || Minor >= 100 || Micro >= 100)
       getDriver().Diag(diag::err_drv_invalid_version_number)
           << OSTarget->getAsString(Args, Opts);
   } else if (Platform == IPhoneOS) {
@@ -1877,7 +1877,7 @@ void Darwin::AddDeploymentTarget(DerivedArgList &Args) const {
   } else if (Platform == WatchOS) {
     if (!Driver::GetReleaseVersion(OSTarget->getOSVersion(), Major, Minor,
                                    Micro, HadExtra) ||
-        HadExtra || Major >= 10 || Minor >= 100 || Micro >= 100)
+        HadExtra || Major >= 100 || Minor >= 100 || Micro >= 100)
       getDriver().Diag(diag::err_drv_invalid_version_number)
           << OSTarget->getAsString(Args, Opts);
   } else if (Platform == DriverKit) {
