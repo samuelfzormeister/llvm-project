@@ -2152,6 +2152,8 @@ void DarwinClang::AddCCKextLibArgs(const ArgList &Args,
     llvm::sys::path::append(P, "libclang_rt.cc_kext_tvos.a");
   } else if (isTargetIPhoneOS()) {
     llvm::sys::path::append(P, "libclang_rt.cc_kext_ios.a");
+  } else if (isTargetDriverKit()) {
+    llvm::sys::path::append(P, "libclang_rt.cc_kext_driverkit.a");
   } else {
     llvm::sys::path::append(P, "libclang_rt.cc_kext.a");
   }
@@ -2410,7 +2412,7 @@ bool Darwin::isAlignedAllocationUnavailable() const {
     OS = llvm::Triple::BridgeOS;
     break;
   case DriverKit:
-    OS = llvm::Triple::BridgeOS;
+    OS = llvm::Triple::DriverKit;
     break;
   }
 

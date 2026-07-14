@@ -153,6 +153,12 @@ public:
     case llvm::Triple::WatchOS: // Earliest supporting version is 5.0.0.
       MinVersion = llvm::VersionTuple(5U);
       break;
+    case llvm::Triple::BridgeOS:
+      MinVersion = llvm::VersionTuple(3U);
+      break;
+    case llvm::Triple::DriverKit:
+      MinVersion = llvm::VersionTuple(18U);
+      break;
     default:
       llvm_unreachable("Unexpected OS");
     }
@@ -296,7 +302,7 @@ protected:
     Builder.defineMacro("__HAIKU__");
     Builder.defineMacro("__ELF__");
     DefineStd(Builder, "unix", Opts);
-    if (this->HasFloat128) 
+    if (this->HasFloat128)
       Builder.defineMacro("__FLOAT128__");
   }
 
