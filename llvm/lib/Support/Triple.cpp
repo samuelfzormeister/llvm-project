@@ -519,6 +519,8 @@ static Triple::OSType parseOS(StringRef OSName) {
     .StartsWith("hurd", Triple::Hurd)
     .StartsWith("wasi", Triple::WASI)
     .StartsWith("emscripten", Triple::Emscripten)
+    .StartsWith("bridgeos", Triple::BridgeOS)
+    .StartsWith("driverkit", Triple::DriverKit)
     .Default(Triple::UnknownOS);
 }
 
@@ -1698,6 +1700,8 @@ StringRef Triple::getARMCPUForArch(StringRef MArch) const {
   case llvm::Triple::IOS:
   case llvm::Triple::WatchOS:
   case llvm::Triple::TvOS:
+  case llvm::Triple::BridgeOS:
+  case llvm::Triple::DriverKit:
     if (MArch == "v7k")
       return "cortex-a7";
     break;

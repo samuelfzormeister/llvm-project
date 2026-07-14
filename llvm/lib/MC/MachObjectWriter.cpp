@@ -745,8 +745,6 @@ static MachO::LoadCommandType getLCFromMCVM(MCVersionMinType Type) {
   case MCVM_IOSVersionMin:     return MachO::LC_VERSION_MIN_IPHONEOS;
   case MCVM_TvOSVersionMin:    return MachO::LC_VERSION_MIN_TVOS;
   case MCVM_WatchOSVersionMin: return MachO::LC_VERSION_MIN_WATCHOS;
-  case MCVM_BridgeOSVersionMin:
-  case MCVM_DriverKitVersionMin: return (MachO::LoadCommandType)0;
   }
   llvm_unreachable("Invalid mc version min type");
 }

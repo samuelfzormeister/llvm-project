@@ -520,8 +520,6 @@ void MCAsmStreamer::EmitDataRegion(MCDataRegionType Kind) {
 
 static const char *getVersionMinDirective(MCVersionMinType Type) {
   switch (Type) {
-  case MCVM_DriverKitVersionMin:  return ".driverkit_version_min";
-  case MCVM_BridgeOSVersionMin:   return ".bridgeos_version_min";
   case MCVM_WatchOSVersionMin:    return ".watchos_version_min";
   case MCVM_TvOSVersionMin:       return ".tvos_version_min";
   case MCVM_IOSVersionMin:        return ".ios_version_min";

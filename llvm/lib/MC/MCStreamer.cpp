@@ -1130,6 +1130,18 @@ void MCStreamer::EmitVersionForTarget(const Triple &Target,
     EmitBuildVersion(MachO::PLATFORM_MACCATALYST, Major, Minor, Update,
                      SDKVersion);
     return;
+  } else if (Target.isBridgeOS()) {
+      Target.getBridgeOSVersion(Major, Minor, Update);
+      assert(Major && "A non-zero major version is expected");
+      EmitBuildVersion(MachO::PLATFORM_BRIDGEOS, Major, Minor, Update,
+                       SDKVersion);
+      return;
+  } else if (Target.isDriverKit()) {
+      Target.getDriverKitVersion(Major, Minor, Update);
+      assert(Major && "A non-zero major version is expected");
+      EmitBuildVersion(MachO::PLATFORM_DRIVERKIT, Major, Minor, Update,
+                       SDKVersion);
+      return;
   }
 
   MCVersionMinType VersionType;

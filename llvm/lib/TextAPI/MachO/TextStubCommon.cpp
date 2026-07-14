@@ -63,6 +63,9 @@ void ScalarTraits<PlatformSet>::output(const PlatformSet &Values, void *IO,
   case PlatformKind::bridgeOS:
     OS << "bridgeos";
     break;
+  case PlatformKind::DriverKit:
+    OS << "driverkit";
+    break;
   }
 }
 
@@ -75,6 +78,7 @@ StringRef ScalarTraits<PlatformSet>::input(StringRef Scalar, void *IO,
                       .Case("watchos", PlatformKind::watchOS)
                       .Case("tvos", PlatformKind::tvOS)
                       .Case("bridgeos", PlatformKind::bridgeOS)
+                      .Case("driverkit", PlatformKind::DriverKit)
                       .Default(PlatformKind::unknown);
 
   if (Platform == PlatformKind::unknown)

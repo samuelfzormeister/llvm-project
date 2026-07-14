@@ -1107,8 +1107,6 @@ void DarwinAsmParser::checkVersion(StringRef Directive, StringRef Arg,
 
 static Triple::OSType getOSTypeFromMCVM(MCVersionMinType Type) {
   switch (Type) {
-  case MCVM_DriverKitVersionMin: return Triple::DriverKit;
-  case MCVM_BridgeOSVersionMin: return Triple::BridgeOS;
   case MCVM_WatchOSVersionMin: return Triple::WatchOS;
   case MCVM_TvOSVersionMin:    return Triple::TvOS;
   case MCVM_IOSVersionMin:     return Triple::IOS;

@@ -25,7 +25,8 @@ enum class PlatformKind : unsigned {
   iOS = MachO::PLATFORM_IOS,
   tvOS = MachO::PLATFORM_TVOS,
   watchOS = MachO::PLATFORM_WATCHOS,
-  bridgeOS = MachO::PLATFORM_BRIDGEOS
+  bridgeOS = MachO::PLATFORM_BRIDGEOS,
+  DriverKit = MachO::PLATFORM_DRIVERKIT,
 };
 
 using PlatformSet = SmallSet<PlatformKind, 3>;

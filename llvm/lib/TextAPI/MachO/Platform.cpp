@@ -29,7 +29,10 @@ PlatformKind mapToPlatformKind(const Triple &Target) {
     return PlatformKind::tvOS;
   case Triple::WatchOS:
     return PlatformKind::watchOS;
-    // TODO: add bridgeOS once in llvm::Triple
+  case Triple::BridgeOS:
+    return PlatformKind::bridgeOS;
+  case Triple::DriverKit:
+    return PlatformKind::DriverKit;
   }
 }
 
@@ -54,6 +57,8 @@ StringRef getPlatformName(PlatformKind Platform) {
     return "watchOS";
   case PlatformKind::bridgeOS:
     return "bridgeOS";
+  case PlatformKind::DriverKit:
+    return "DriverKit";
   }
   llvm_unreachable("Unknown llvm.MachO.PlatformKind enum");
 }
