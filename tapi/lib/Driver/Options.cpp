@@ -650,6 +650,7 @@ bool Options::processFrontendOptions(DiagnosticsEngine &diag,
         {OPT_mwatchos_version_min_EQ, Platform::watchOS},
         {OPT_mwatchos_simulator_version_min_EQ, Platform::watchOSSimulator},
         {OPT_mbridgeos_version_min_EQ, Platform::bridgeOS},
+        {OPT_mdriverkit_version_min_EQ, Platform::DriverKit},
     };
 
     Platform platform = Platform::unknown;
@@ -680,6 +681,7 @@ bool Options::processFrontendOptions(DiagnosticsEngine &diag,
           {"IPHONEOS_DEPLOYMENT_TARGET", Platform::iOS},
           {"TVOS_DEPLOYMENT_TARGET", Platform::tvOS},
           {"WATCHOS_DEPLOYMENT_TARGET", Platform::watchOS},
+          {"DRIVERKIT_DEPLOYMENT_TARGET", Platform::DriverKit},
       };
 
       const char *first = nullptr;
@@ -730,6 +732,8 @@ bool Options::processFrontendOptions(DiagnosticsEngine &diag,
       return false;
     case Triple::MacOSX:
     case Triple::IOS:
+    case Triple::DriverKit:
+    case Triple::bridgeOS:
       break;
     }
 
