@@ -345,6 +345,12 @@ static std::vector<Triple> constructTripleFromMachO(MachOObjectFile *object) {
       case MachO::PLATFORM_WATCHOSSIMULATOR:
         triples.emplace_back(arch, "apple", "watchos" + OSVersion, "simulator");
         break;
+      case MachO::PLATFORM_BRIDGEOS:
+        triples.emplace_back(arch, "apple", "bridgeos" + OSVersion);
+        break;
+      case MachO::PLATFORM_DRIVERKIT:
+        triples.emplace_back(arch, "apple", "driverkit" + OSVersion);
+        break;
       default:
         break; // skip.
       }

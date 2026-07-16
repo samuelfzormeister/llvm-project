@@ -74,6 +74,7 @@ Platform mapToPlatformFromXBSEnv(StringRef env) {
       .Case("ios_sim", Platform::iOSSimulator)
       .Case("watch_sim", Platform::watchOSSimulator)
       .Case("atv_sim", Platform::tvOSSimulator)
+      .Case("driverkit", Platform::DriverKit)
       .Default(Platform::unknown);
 }
 

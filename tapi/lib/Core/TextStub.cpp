@@ -155,6 +155,12 @@ template <> struct ScalarTraits<PlatformSet> {
     case Platform::tvOSSimulator:
       out << "tvos";
       return;
+    case Platform::bridgeOS:
+      out << "bridgeos";
+      return;
+    case Platform::DriverKit:
+      out << "driverkit";
+      return;
     case Platform::macCatalyst:
       // DON'T RENAME THIS. We need to keep existing tools that read TBD v3
       // files working.
@@ -192,6 +198,8 @@ template <> struct ScalarTraits<PlatformSet> {
                         // internal TBD v3 files working.
                         .Case("iosmac", Platform::macCatalyst)
                         .Case("maccatalyst", Platform::macCatalyst)
+                        .Case("bridgeos", Platform::bridgeOS)
+                        .Case("driverkit", Platform::DriverKit)
                         .Default(Platform::unknown);
 
     if (platform == Platform::macCatalyst)
