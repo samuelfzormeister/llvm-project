@@ -1945,6 +1945,13 @@ void DarwinClang::AddClangSystemIncludeArgs(const llvm::opt::ArgList &DriverArgs
     addSystemInclude(DriverArgs, CC1Args, P);
   }
 
+  if (getTriple().getOS() == llvm::Triple::DriverKit) {
+    // [samuelfzormeister]: Manually insert DriverKit root.
+    SmallString<128> P(Sysroot);
+    llvm::sys::path::append(P, "System", "DriverKit", "usr", "include");
+    addExternCSystemInclude(DriverArgs, CC1Args, P.str());
+  }
+
   if (NoStdInc || NoStdlibInc)
     return;
 

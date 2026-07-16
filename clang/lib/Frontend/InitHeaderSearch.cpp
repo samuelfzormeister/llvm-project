@@ -441,6 +441,11 @@ void InitHeaderSearch::AddDefaultIncludePaths(const LangOptions &Lang,
       AddPath("/System/Library/Frameworks", System, true);
       AddPath("/Library/Frameworks", System, true);
     }
+    if (triple.isDriverKit()) {
+        AddPath("/System/DriverKit/usr/include", System, false);
+        AddPath("/System/DriverKit/Runtime/usr/include", System, false);
+        AddPath("/System/DriverKit/Runtime/usr/local/include", System, false);
+    }
     return;
   }
 
