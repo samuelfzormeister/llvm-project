@@ -21,6 +21,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#if !TARGET_OS_DRIVERKIT
+
 // These three variables hold the host's OS version.
 static int32_t GlobalMajor, GlobalMinor, GlobalSubminor;
 static dispatch_once_t DispatchOnceCounter;
@@ -255,6 +257,15 @@ int32_t __isPlatformVersionAtLeast(uint32_t Platform, uint32_t Major,
       {Platform, ConstructVersion(Major, Minor, Subminor)}};
   return AvailabilityVersionCheck(1, Versions);
 }
+
+#else
+
+int32_t __isPlatformVersionAtLeast(uint32_t Platform, uint32_t Major,
+                                   uint32_t Minor, uint32_t Subminor) {
+  return 0;
+}
+
+#endif
 
 #else
 

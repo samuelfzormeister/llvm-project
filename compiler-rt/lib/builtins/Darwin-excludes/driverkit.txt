@@ -1,0 +1,4 @@
+eprintf
+emutls
+enable_execute_stack
+clear_cache
